@@ -41,6 +41,7 @@ public:
   void setupUi(qMRMLMarkupsLabelWidget*);
 
   vtkWeakPointer<vtkMRMLMarkupsLabelNode> MarkupsLabelNode;
+  bool textBeingModified = false;
 };
 
 // --------------------------------------------------------------------------
@@ -101,6 +102,12 @@ void qMRMLMarkupsLabelWidget::updateWidgetFromMRML()
     d->labelCollapsibleButton->setVisible(false);
     return;
     }
+
+  // Without this, the cursor would be forced to the beginning of the text.
+  if (d->textBeingModified)
+  {
+    return;
+  }
 
   int numberOfDefinedControlPoints = d->MarkupsLabelNode->GetNumberOfDefinedControlPoints(false);
   d->ThreeDTipDimensionModeLabel->setVisible(numberOfDefinedControlPoints == 2);
@@ -166,7 +173,10 @@ void qMRMLMarkupsLabelWidget::onTextChanged()
   {
     return;
   }
+  // Block updateWidgetFromMRML().
+  d->textBeingModified = true;
   d->MarkupsLabelNode->SetLabel(d->labelTextEdit->toPlainText().toStdString().c_str());
+  d->textBeingModified = false;
 }
 
 // --------------------------------------------------------------------------
