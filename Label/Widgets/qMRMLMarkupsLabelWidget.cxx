@@ -116,7 +116,7 @@ void qMRMLMarkupsLabelWidget::updateWidgetFromMRML()
 
   int numberOfControlPoints = d->MarkupsLabelNode->GetNumberOfControlPoints();
   d->labelLocationLabel->setVisible(numberOfControlPoints > 1);
-  d->labelLocatiGroupBox->setVisible(numberOfControlPoints > 1);
+  d->labelLocationGroupBox->setVisible(numberOfControlPoints > 1);
   this->setMRMLMarkupsNode(d->MarkupsLabelNode);
 }
 
