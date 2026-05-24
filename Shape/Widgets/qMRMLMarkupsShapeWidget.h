@@ -76,6 +76,8 @@ protected slots:
   void onSnapControlPoints();
   void onSplineResolutionChanged(double value);
 
+  void onResliceActionToggled(bool);
+
   // Parametric shapes.
   // Object parameters.
   void onParametricIsotropicScalingButtonClicked();

@@ -122,6 +122,9 @@ public:
   vtkGetMacro(SplineNewInterpolationInterval, bool);
   vtkSetMacro(SplineNewInterpolationInterval, bool);
   vtkBooleanMacro(SplineNewInterpolationInterval, bool);
+  vtkGetMacro(AutoResliceOnJumpToPoint, bool);
+  vtkSetMacro(AutoResliceOnJumpToPoint, bool);
+  vtkBooleanMacro(AutoResliceOnJumpToPoint, bool);
   // Parametrics.
   vtkGetMacro(ParametricN1, double);
   vtkGetMacro(ParametricN2, double);
@@ -319,6 +322,9 @@ protected:
   // In the original scheme, this was the number of control point pairs.
   // In the new scheme, this is the number of intervals between control point pairs.
   bool SplineNewInterpolationInterval = false;
+
+  // Reslice a selected view whenever a control point is clicked; helpful for adjusting a tube around a lumen/lesion.
+  bool AutoResliceOnJumpToPoint = false;
   
   bool ShapeIsParametric = false;
   // SuperEllipsoid, SuperToroid.

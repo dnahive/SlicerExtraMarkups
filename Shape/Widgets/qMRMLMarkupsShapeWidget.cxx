@@ -47,6 +47,7 @@ public:
   qMRMLMarkupsShapeWidgetPrivate(qMRMLMarkupsShapeWidget* object);
   ~qMRMLMarkupsShapeWidgetPrivate();
   void setupUi(qMRMLMarkupsShapeWidget*);
+  void addResliceMenu();
 
   vtkWeakPointer<vtkMRMLMarkupsShapeNode> MarkupsShapeNode;
   QMenu * TubeOptionMenu = nullptr;
@@ -153,7 +154,7 @@ void qMRMLMarkupsShapeWidgetPrivate::setupUi(qMRMLMarkupsShapeWidget* widget)
                    q, SLOT(onResolutionChanged(double)));
   QObject::connect(this->resliceInputSelector, SIGNAL(currentNodeChanged(vtkMRMLNode*)),
                    q, SLOT(onResliceNodeChanged(vtkMRMLNode*)));
-  QObject::connect(this->reslicePushButton, SIGNAL(clicked()),
+  QObject::connect(this->resliceToolButton, SIGNAL(clicked()),
                    q, SLOT(onResliceButtonClicked()));
   QObject::connect(this->tubeMenuOptionButton, SIGNAL(clicked()),
                    q, SLOT(onTubeMenuOptionButtonClicked()));
@@ -209,6 +210,24 @@ void qMRMLMarkupsShapeWidgetPrivate::setupUi(qMRMLMarkupsShapeWidget* widget)
 }
 
 // --------------------------------------------------------------------------
+void qMRMLMarkupsShapeWidgetPrivate::addResliceMenu()
+{
+  Q_Q(qMRMLMarkupsShapeWidget);
+
+  QMenu * applyButtonMenu = new QMenu(this->resliceToolButton);
+  this->resliceToolButton->setMenu(applyButtonMenu);
+  
+  // Actions.
+  QAction * actionAutoReslice = applyButtonMenu->addAction("Automatic reslice on jump to point");
+  actionAutoReslice->setData(0);
+  actionAutoReslice->setCheckable(true);
+  actionAutoReslice->setObjectName("ActionAutoResliceOnJumpToPoint");
+  
+  QObject::connect(actionAutoReslice, SIGNAL(triggered(bool)),
+                   q, SLOT(onResliceActionToggled(bool)));
+}
+
+// --------------------------------------------------------------------------
 qMRMLMarkupsShapeWidget::
 qMRMLMarkupsShapeWidget(QWidget *parent)
   : Superclass(parent),
@@ -226,6 +245,7 @@ void qMRMLMarkupsShapeWidget::setup()
 {
   Q_D(qMRMLMarkupsShapeWidget);
   d->setupUi(this);
+  d->addResliceMenu();
 }
 // --------------------------------------------------------------------------
 void qMRMLMarkupsShapeWidget::updateWidgetFromMRML()
@@ -832,4 +852,16 @@ void qMRMLMarkupsShapeWidget::onSplineResolutionChanged(double value)
   }
   
   d->MarkupsShapeNode->SetSplineResolution((int) value);
+}
+
+// --------------------------------------------------------------------------
+void qMRMLMarkupsShapeWidget::onResliceActionToggled(bool checked)
+{
+  Q_D(qMRMLMarkupsShapeWidget);
+  if (!d->MarkupsShapeNode)
+  {
+    return;
+  }
+  
+  d->MarkupsShapeNode->SetAutoResliceOnJumpToPoint(checked);
 }

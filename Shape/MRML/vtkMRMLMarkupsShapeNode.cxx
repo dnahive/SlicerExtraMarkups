@@ -921,6 +921,10 @@ void vtkMRMLMarkupsShapeNode::OnJumpToPoint(vtkObject* caller, unsigned long eve
     return;
   }
   client->ActiveControlPoint = displayNode->GetActiveControlPoint();
+  if (client->AutoResliceOnJumpToPoint)
+  {
+    client->ResliceToControlPoints();
+  }
 }
 
 //----------------------------------------------------------------------------
